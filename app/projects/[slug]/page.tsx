@@ -2,16 +2,15 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink, Tag } from 'lucide-react';
 import { portfolioData } from '@/lib/data';
 
 export default function ProjectDetail() {
   const params = useParams();
   const slug = params.slug as string;
 
-  // In production, you would fetch project by slug
-  // For now, we'll find by matching slug pattern
-  const project = portfolioData.projects.find(p => 
+  // Cari project berdasarkan slug dari URL
+  const project = portfolioData.projects.find(p =>
     p.link.caseStudy.includes(slug)
   );
 
@@ -26,7 +25,7 @@ export default function ProjectDetail() {
             href="/"
             className="text-soft-sage hover:text-deep-plum transition-colors"
           >
-            ← Back to Home
+            ← Kembali ke Beranda
           </Link>
         </div>
       </div>
@@ -46,7 +45,7 @@ export default function ProjectDetail() {
             "
           >
             <ArrowLeft size={20} />
-            Back to Projects
+            Kembali ke Projects
           </Link>
         </div>
       </header>
@@ -54,12 +53,12 @@ export default function ProjectDetail() {
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          {/* Title */}
+          {/* Judul */}
           <h1 className="text-4xl lg:text-5xl font-playfair font-bold text-deep-plum mb-6">
             {project.title}
           </h1>
 
-          {/* Meta Info */}
+          {/* Info Meta */}
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="flex items-center gap-2 text-gray-600">
               <Tag size={18} />
@@ -74,7 +73,7 @@ export default function ProjectDetail() {
             )}
           </div>
 
-          {/* Description */}
+          {/* Deskripsi Singkat */}
           <p className="text-xl text-gray-600 leading-relaxed mb-8">
             {project.description}
           </p>
@@ -82,7 +81,7 @@ export default function ProjectDetail() {
           {/* Tech Stack */}
           <div className="mb-8">
             <h3 className="text-sm font-bold text-gray-500 tracking-wider uppercase mb-3">
-              Technologies Used
+              Teknologi yang Digunakan
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech, index) => (
@@ -96,8 +95,8 @@ export default function ProjectDetail() {
             </div>
           </div>
 
-          {/* Links */}
-          <div className="flex gap-4">
+          {/* Link Tombol */}
+          <div className="flex flex-wrap gap-4">
             {project.link.github && (
               <a
                 href={project.link.github}
@@ -109,14 +108,28 @@ export default function ProjectDetail() {
                 "
               >
                 <Github size={20} />
-                View on GitHub
+                Lihat di GitHub
+              </a>
+            )}
+            {project.link.live && (
+              <a
+                href={project.link.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  flex items-center gap-2 px-6 py-3 border-2 border-deep-plum text-deep-plum rounded-full
+                  transition-all duration-300 hover:scale-105 hover:bg-deep-plum hover:text-white
+                "
+              >
+                <ExternalLink size={20} />
+                Live Demo
               </a>
             )}
           </div>
         </div>
       </section>
 
-      {/* Project Image */}
+      {/* Gambar Project */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="aspect-video bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 rounded-2xl flex items-center justify-center">
@@ -128,59 +141,72 @@ export default function ProjectDetail() {
         </div>
       </section>
 
-      {/* Project Details */}
+      {/* Detail Project */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl font-playfair font-bold text-deep-plum mb-6">
+          <h2 className="text-3xl font-playfair font-bold text-deep-plum mb-8 border-b pb-4">
             Project Overview
           </h2>
 
           <div className="prose prose-lg max-w-none">
-            <h3 className="text-xl font-bold text-deep-plum mb-4">Challenge</h3>
-            <p className="text-gray-600 mb-6">
-              This project addressed the need for {project.category.toLowerCase()} 
-              solutions to drive business insights and decision-making. The goal was 
-              to create a scalable, efficient system that could handle complex data 
-              analysis requirements.
-            </p>
+            {/* Deskripsi Lengkap / About */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold text-deep-plum mb-4">About this Project</h3>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                {project.fullDescription || project.description}
+              </p>
+            </div>
 
-            <h3 className="text-xl font-bold text-deep-plum mb-4">Solution</h3>
-            <p className="text-gray-600 mb-6">
-              Using {project.techStack.join(', ')}, I developed a comprehensive solution 
-              that transformed raw data into actionable insights. The implementation 
-              focused on accuracy, performance, and user-friendly visualization.
-            </p>
+            {/* Structured Sections */}
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-bold text-deep-plum mb-3">Challenge</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Project ini mengatasi kebutuhan solusi {project.category.toLowerCase()}
+                  untuk mendorong wawasan bisnis dan pengambilan keputusan. Tantangan utamanya adalah mengolah data dalam jumlah besar dengan cepat dan akurat.
+                </p>
+              </div>
 
-            <h3 className="text-xl font-bold text-deep-plum mb-4">Impact</h3>
-            <p className="text-gray-600 mb-6">
-              {project.impact}. The solution has been successfully deployed and 
-              continues to provide valuable insights for data-driven decision making.
-            </p>
+              <div>
+                <h3 className="text-xl font-bold text-deep-plum mb-3">Solution</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Menggunakan {project.techStack.join(', ')}, saya mengembangkan solusi komprehensif
+                  yang mengubah data mentah menjadi wawasan yang dapat ditindaklanjuti. Fokus implementasi adalah pada akurasi, performa, dan visualisasi yang user-friendly.
+                </p>
+              </div>
 
-            <h3 className="text-xl font-bold text-deep-plum mb-4">Key Features</h3>
+              <div>
+                <h3 className="text-xl font-bold text-deep-plum mb-3">Impact</h3>
+                <p className="text-gray-600 leading-relaxed bg-soft-sage/20 p-4 rounded-lg border border-soft-sage inline-block">
+                  {project.impact}
+                </p>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-bold text-deep-plum mb-4">Fitur Utama</h3>
             <ul className="space-y-2 text-gray-600">
               <li className="flex items-start gap-3">
                 <span className="w-1.5 h-1.5 bg-muted-rose rounded-full mt-2"></span>
-                <span>Interactive data visualization and reporting</span>
+                <span>Visualisasi data dan pelaporan interaktif</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-1.5 h-1.5 bg-muted-rose rounded-full mt-2"></span>
-                <span>Automated data processing and cleaning pipeline</span>
+                <span>Pipeline pemrosesan dan pembersihan data otomatis</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-1.5 h-1.5 bg-muted-rose rounded-full mt-2"></span>
-                <span>Real-time analytics and monitoring</span>
+                <span>Analitik dan pemantauan real-time</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-1.5 h-1.5 bg-muted-rose rounded-full mt-2"></span>
-                <span>Scalable architecture for future growth</span>
+                <span>Arsitektur yang skalabel untuk pertumbuhan di masa depan</span>
               </li>
             </ul>
           </div>
         </div>
       </section>
 
-      {/* More Projects CTA */}
+      {/* CTA Lihat Project Lain */}
       <section className="py-12">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <Link
@@ -190,7 +216,7 @@ export default function ProjectDetail() {
               font-medium transition-all duration-300 hover:scale-105 hover:shadow-xl
             "
           >
-            View More Projects
+            Lihat Project Lainnya
             <ExternalLink size={20} />
           </Link>
         </div>

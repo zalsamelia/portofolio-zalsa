@@ -50,7 +50,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="text-2xl font-playfair font-bold text-deep-plum">
-            Zalsa.
+            Zalsa
           </Link>
 
           {/* Navigation Menu */}

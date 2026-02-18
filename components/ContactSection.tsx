@@ -1,8 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Linkedin, Github, Calendar, Send } from 'lucide-react';
+import { Mail, Linkedin, Github, Send } from 'lucide-react';
 import { portfolioData } from '@/lib/data';
+
+// Ikon Kaggle kustom (SVG)
+const KaggleIcon = ({ size = 24 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.353c0-.233.118-.353.354-.353h2.431c.234 0 .351.12.351.353v14.343l6.203-6.272c.165-.165.33-.246.495-.246h3.239c.144 0 .236.06.285.18.046.149.034.255-.036.315l-6.555 6.344 6.836 8.507c.095.104.117.208.07.336z" />
+  </svg>
+);
 
 const ContactSection = () => {
   const { contact } = portfolioData;
@@ -18,7 +31,7 @@ const ContactSection = () => {
       case 'mail': return <Mail size={24} />;
       case 'linkedin': return <Linkedin size={24} />;
       case 'github': return <Github size={24} />;
-      case 'calendar': return <Calendar size={24} />;
+      case 'kaggle': return <KaggleIcon size={24} />;
       default: return <Mail size={24} />;
     }
   };
@@ -27,51 +40,38 @@ const ContactSection = () => {
     e.preventDefault();
     setStatus('sending');
 
-    // Real email sending with EmailJS
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    try {
+      // Mengambil ID dari environment variable
+      const formId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
 
-    if (!serviceId || !templateId || !publicKey) {
-      console.warn('EmailJS keys are missing. Check .env.local');
-      // Fallback simulation for demo purposes
-      setTimeout(() => {
-        console.log('Form submitted (Simulation):', formData);
+      if (!formId || formId === 'Place_Your_Formspree_ID_Here') {
+        alert('Formspree ID belum disetting di .env.local');
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 3000);
+        return;
+      }
+
+      const response = await fetch(`https://formspree.io/f/${formId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        })
+      });
+
+      if (response.ok) {
         setStatus('success');
         setTimeout(() => {
           setFormData({ name: '', email: '', message: '' });
           setStatus('idle');
         }, 3000);
-      }, 1500);
-      return;
-    }
-
-    try {
-      // Dynamic import to avoid SSR issues if any
-      const emailjs = (await import('@emailjs/browser')).default;
-
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: "Zalsabilah"
-        },
-        publicKey
-      );
-
-      console.log('Form submitted successfully:', formData);
-      setStatus('success');
-
-      // Reset form
-      setTimeout(() => {
-        setFormData({ name: '', email: '', message: '' });
-        setStatus('idle');
-      }, 3000);
-    } catch (error) {
-      console.error('EmailJS Error:', error);
+      } else {
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 3000);
+      }
+    } catch {
       setStatus('error');
       setTimeout(() => setStatus('idle'), 3000);
     }
@@ -98,7 +98,7 @@ const ContactSection = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Left Column - Contact Links */}
+          {/* Kolom Kiri - Link Kontak */}
           <div className="space-y-8">
             <div className="space-y-6">
               {contact.links.map((link, index) => (
@@ -114,7 +114,7 @@ const ContactSection = () => {
                     group
                   "
                 >
-                  {/* Icon Circle */}
+                  {/* Lingkaran Ikon */}
                   <div className="
                     w-16 h-16 bg-gray-100 rounded-full
                     flex items-center justify-center
@@ -126,13 +126,13 @@ const ContactSection = () => {
                     </div>
                   </div>
 
-                  {/* Text */}
+                  {/* Teks */}
                   <div>
                     <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">
                       {link.type}
                     </div>
                     <div className="text-deep-plum font-medium">
-                      {link.label}
+                      {link.value}
                     </div>
                   </div>
                 </a>
@@ -140,14 +140,14 @@ const ContactSection = () => {
             </div>
           </div>
 
-          {/* Right Column - Contact Form */}
+          {/* Kolom Kanan - Form Kontak */}
           <div className="bg-white rounded-2xl p-8 shadow-lg">
             <h3 className="text-2xl font-playfair font-bold text-deep-plum mb-6">
               Send a Message
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Field */}
+              {/* Field Nama */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                   Name
@@ -168,7 +168,7 @@ const ContactSection = () => {
                 />
               </div>
 
-              {/* Email Field */}
+              {/* Field Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email
@@ -189,7 +189,7 @@ const ContactSection = () => {
                 />
               </div>
 
-              {/* Message Field */}
+              {/* Field Pesan */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                   Message
@@ -211,7 +211,7 @@ const ContactSection = () => {
                 ></textarea>
               </div>
 
-              {/* Submit Button */}
+              {/* Tombol Kirim */}
               <button
                 type="submit"
                 disabled={status === 'sending'}
@@ -240,7 +240,7 @@ const ContactSection = () => {
               </button>
             </form>
 
-            {/* Status Messages */}
+            {/* Pesan Status */}
             {status === 'success' && (
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 text-sm">

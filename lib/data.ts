@@ -66,12 +66,14 @@ export const portfolioData = {
       category: "Machine Learning",
       categories: ["Machine Learning", "Data Analysis"],
       description: "Identifying high-value customer groups using clustering algorithms to drive marketing strategy.",
+      fullDescription: "Project ini menggunakan algoritma K-Means Clustering untuk mengelompokkan pelanggan berdasarkan pola perilaku transaksi mereka. Dataset yang digunakan mencakup lebih dari 50.000 transaksi selama periode 6 bulan dari sebuah perusahaan retail. Proses analisis dimulai dari data cleaning, feature engineering (RFM analysis: Recency, Frequency, Monetary), hingga penentuan jumlah cluster optimal menggunakan Elbow Method. Hasilnya ditemukan 5 segmen pelanggan dengan karakteristik yang berbeda-beda, mulai dari pelanggan VIP hingga pelanggan yang berisiko churn. Insight ini kemudian digunakan oleh tim marketing untuk merancang kampanye yang lebih tepat sasaran.",
       image: "/images/project-placeholder.svg",
       impact: "25% increase in targeted campaign ROI",
       techStack: ["Python", "Pandas", "Scikit-learn", "+1"],
       link: {
         caseStudy: "/projects/customer-segmentation",
-        github: "https://github.com/username/customer-segmentation"
+        github: "https://github.com/zalsamelia/customer-segmentation",
+        live: null
       }
     },
     {
@@ -80,12 +82,14 @@ export const portfolioData = {
       category: "Dashboard",
       categories: ["Dashboard", "Visualization"],
       description: "Comprehensive analytics dashboard tracking revenue, conversion funnels, and customer behavior metrics.",
+      fullDescription: "Platform analitik e-commerce ini dibangun untuk membantu tim bisnis memantau performa toko secara real-time. Dashboard interaktif menampilkan metrik utama seperti revenue harian/mingguan/bulanan, conversion funnel dari kunjungan hingga pembelian, serta analisis perilaku pelanggan. Data diambil dari database PostgreSQL menggunakan query SQL yang dioptimasi, kemudian divisualisasikan menggunakan Power BI dengan refresh otomatis setiap jam. Fitur drill-down memungkinkan tim untuk menganalisis performa per kategori produk, per wilayah, dan per segmen pelanggan.",
       image: "/images/project-placeholder.svg",
       impact: "Real-time insights for 500K+ daily users",
       techStack: ["Power BI", "SQL", "Python"],
       link: {
         caseStudy: "/projects/ecommerce-analytics",
-        github: "https://github.com/username/ecommerce-dashboard"
+        github: "https://github.com/zalsamelia/ecommerce-dashboard",
+        live: null
       }
     },
     {
@@ -94,12 +98,14 @@ export const portfolioData = {
       category: "Dashboard",
       categories: ["Dashboard", "Visualization"],
       description: "Real-time visualization for executive decision-making, featuring interactive charts and automated reporting.",
+      fullDescription: "Dashboard performa penjualan ini dirancang khusus untuk kebutuhan eksekutif perusahaan dalam pengambilan keputusan strategis. Menggunakan Tableau sebagai tools visualisasi utama, dashboard ini menampilkan KPI penjualan secara real-time, tren penjualan per produk dan wilayah, serta perbandingan target vs aktual. Fitur unggulan adalah sistem pelaporan otomatis yang mengirimkan ringkasan performa mingguan ke email seluruh stakeholder. Setelah implementasi, tim sales berhasil mengidentifikasi peluang upselling yang sebelumnya terlewat, berkontribusi pada peningkatan penjualan sebesar 15%.",
       image: "/images/project-placeholder.svg",
       impact: "15% sales increase after implementation",
       techStack: ["Tableau", "SQL", "Python"],
       link: {
         caseStudy: "/projects/sales-dashboard",
-        github: null
+        github: null,
+        live: null
       }
     },
     {
@@ -108,12 +114,14 @@ export const portfolioData = {
       category: "Machine Learning",
       categories: ["Machine Learning", "Data Analysis"],
       description: "ML model predicting equipment failures to optimize maintenance schedules and reduce downtime.",
+      fullDescription: "Model machine learning ini dikembangkan untuk memprediksi kegagalan peralatan industri sebelum terjadi, sehingga tim maintenance dapat melakukan perawatan preventif secara tepat waktu. Data sensor dari 200+ mesin dikumpulkan selama 2 tahun, mencakup suhu, getaran, tekanan, dan parameter operasional lainnya. Model menggunakan kombinasi Random Forest dan LSTM (Long Short-Term Memory) untuk mendeteksi pola anomali. Sistem peringatan dini berhasil mengurangi downtime tak terduga sebesar 30% dan menghemat biaya perbaikan darurat yang signifikan.",
       image: "/images/project-placeholder.svg",
       impact: "30% reduction in unexpected downtime",
       techStack: ["Python", "TensorFlow", "Pandas", "SQL"],
       link: {
         caseStudy: "/projects/predictive-maintenance",
-        github: "https://github.com/username/predictive-maintenance"
+        github: "https://github.com/zalsamelia/predictive-maintenance",
+        live: null
       }
     },
     {
@@ -122,12 +130,14 @@ export const portfolioData = {
       category: "Visualization",
       categories: ["Visualization", "Data Analysis"],
       description: "Interactive map visualization showing global health trends over the last decade.",
+      fullDescription: "Proyek visualisasi data kesehatan global ini dibuat untuk membantu sebuah NGO internasional dalam memahami tren kesehatan dunia selama satu dekade terakhir. Data bersumber dari WHO dan World Bank, mencakup indikator seperti angka kematian bayi, harapan hidup, prevalensi penyakit menular, dan akses layanan kesehatan di 150+ negara. Menggunakan Tableau dengan fitur peta interaktif, pengguna dapat menjelajahi data berdasarkan wilayah, tahun, dan indikator kesehatan tertentu. Visualisasi ini kemudian digunakan oleh NGO untuk menentukan prioritas alokasi sumber daya bantuan kesehatan.",
       image: "/images/project-placeholder.svg",
       impact: "Used by NGO for resource allocation",
       techStack: ["Tableau", "Excel"],
       link: {
         caseStudy: "/projects/global-health",
-        github: null
+        github: null,
+        live: null
       }
     }
   ],
@@ -188,19 +198,28 @@ export const portfolioData = {
         name: "Google Data Analytics Professional",
         issuer: "Google",
         year: "2023",
-        image: "/images/project-placeholder.svg"
+        image: "/images/project-placeholder.svg",
+        imageUrl: "/certificates/google-cert.svg",
+        pdfUrl: "/certificates/google-cert.pdf",
+        credentialUrl: "https://coursera.org/verify/professional-cert/XXXX"
       },
       {
         name: "IBM Data Science Specialization",
         issuer: "IBM",
         year: "2022",
-        image: "/images/project-placeholder.svg"
+        image: "/images/project-placeholder.svg",
+        imageUrl: "/certificates/ibm-cert.svg",
+        pdfUrl: "/certificates/ibm-cert.pdf",
+        credentialUrl: "https://coursera.org/verify/specialization/XXXX"
       },
       {
         name: "Tableau Desktop Specialist",
         issuer: "Tableau",
         year: "2023",
-        image: "/images/project-placeholder.svg"
+        image: "/images/project-placeholder.svg",
+        imageUrl: "/certificates/tableau-cert.svg",
+        pdfUrl: "/certificates/tableau-cert.pdf",
+        credentialUrl: "https://tableau.com/verify/XXXX"
       }
     ]
   },
@@ -220,23 +239,23 @@ export const portfolioData = {
       {
         type: "LINKEDIN",
         label: "LinkedIn",
-        value: "linkedin.com/in/zalsabilahrezky",
-        url: "https://linkedin.com/in/zalsabilahrezky",
+        value: "linkedin.com/in/zalsabilah-rezky-amelia-arep",
+        url: "https://linkedin.com/in/zalsabilah-rezky-amelia-arep",
         icon: "linkedin"
       },
       {
         type: "GITHUB",
         label: "GitHub",
-        value: "github.com/zalsabilamelia",
-        url: "https://github.com/zalsabilamelia",
+        value: "github.com/zalsamelia",
+        url: "https://github.com/zalsamelia",
         icon: "github"
       },
       {
-        type: "SCHEDULE",
-        label: "Schedule Call",
-        value: "Schedule a meeting",
-        url: "https://calendly.com/zalsabilah",
-        icon: "calendar"
+        type: "KAGGLE",
+        label: "Kaggle",
+        value: "kaggle.com/zalsabilahamelia",
+        url: "https://www.kaggle.com/zalsabilahamelia",
+        icon: "kaggle"
       }
     ]
   }

@@ -17,7 +17,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <h3 className="text-2xl font-playfair font-bold text-deep-plum mb-2">
-              Zalsa.
+              Zalsa
             </h3>
             <p className="text-gray-600">
               Data Analyst & Business Intelligence Specialist

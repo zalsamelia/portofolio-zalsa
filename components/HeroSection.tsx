@@ -8,10 +8,10 @@ const HeroSection = () => {
   const { hero, stats } = portfolioData;
 
   const handleDownloadCV = () => {
-    // Download CV from public/files folder
+    // Download CV dari folder public/files
     const link = document.createElement('a');
-    link.href = '/files/Zalsabilah_DataAnalyst_Resume.pdf';
-    link.download = 'Zalsabilah_DataAnalyst_Resume.pdf';
+    link.href = '/files/cv-zalsabilah.pdf';
+    link.download = 'Zalsabilah_Rezky_Data_Analyst_CV.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#fff8f0"/>
+  <rect x="40" y="40" width="720" height="520" fill="none" stroke="#e8762b" stroke-width="3"/>
+  <rect x="55" y="55" width="690" height="490" fill="none" stroke="#e8762b" stroke-width="1"/>
+  <text x="400" y="180" font-family="Georgia,serif" font-size="36" fill="#2d1b4e" text-anchor="middle" font-weight="bold">Certificate of Completion</text>
+  <text x="400" y="240" font-family="Georgia,serif" font-size="20" fill="#666" text-anchor="middle">This is to certify that</text>
+  <text x="400" y="300" font-family="Georgia,serif" font-size="28" fill="#2d1b4e" text-anchor="middle" font-weight="bold">Zalsabilah Rezky Amelia Arep</text>
+  <text x="400" y="350" font-family="Georgia,serif" font-size="18" fill="#666" text-anchor="middle">has successfully completed</text>
+  <text x="400" y="400" font-family="Georgia,serif" font-size="22" fill="#e8762b" text-anchor="middle" font-weight="bold">Tableau Desktop Specialist</text>
+  <text x="400" y="460" font-family="Georgia,serif" font-size="16" fill="#888" text-anchor="middle">Tableau • 2023</text>
+</svg>

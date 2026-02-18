@@ -1,42 +1,18 @@
-# Portfolio Website - Zalsabilah Rezky
+# Portfolio - Zalsabilah Rezky
 
-Data Analyst portfolio website built with Next.js, showcasing projects, skills, and professional experience.
+Professional Data Analyst portfolio website showcasing data science projects, business intelligence dashboards, and technical skills. Built with modern web technologies to ensure performance and accessibility.
 
-## Tech Stack
-- **Framework**: Next.js 14
+## 🚀 Projects Featured
+- **Customer Segmentation Analysis**: Machine learning clustering for marketing strategy.
+- **E-commerce Analytics Platform**: Real-time sales and behavior dashboards.
+- **Predictive Maintenance Model**: IoT sensor analysis for industrial optimization.
+
+## 🛠️ Tech Stack
+- **Frontend**: Next.js 14, React, TypeScript
 - **Styling**: Tailwind CSS
-- **Language**: TypeScript
 - **Deployment**: Vercel
 
-## Quick Start
+## 📬 Contact
+Interested in working together? Reach out through the contact form on the website or connect via [LinkedIn](https://linkedin.com/in/zalsabilah-rezky-amelia-arep).
 
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the website.
-
-## Customization
-
-Edit `lib/data.ts` to update:
-- Personal information
-- Projects
-- Skills
-- Contact details
-
-Add images to `public/images/` folder.
-
-## Deployment
-
-See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions to Vercel.
-
-## License
-
-© 2026 Zalsabilah Rezky Amelia Arep. All rights reserved.
+© 2026 Zalsabilah Rezky Amelia Arep.
