@@ -4,40 +4,49 @@
 import { useState, useEffect } from 'react';
 import { Download, ArrowRight } from 'lucide-react';
 import { portfolioData as fallbackData } from '@/lib/data';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const HeroSection = () => {
   const [hero, setHero] = useState(fallbackData.hero);
-  const [stats] = useState(fallbackData.stats);
+  const [stats, setStats] = useState(fallbackData.stats);
   const [cvLink, setCvLink] = useState('');
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const docRef = doc(db, 'site_data', 'profile');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data.heroName) {
-            setHero({
-              title: data.heroTitle || fallbackData.hero.title,
-              name: data.heroName,
-              tagline: data.heroTagline || fallbackData.hero.tagline,
-              description: data.heroDescription || fallbackData.hero.description,
-              status: data.heroStatus || fallbackData.hero.status,
-              profileImage: fallbackData.hero.profileImage
-            });
-          }
-          if (data.cvLink) {
-            setCvLink(data.cvLink);
-          }
+    const unsubProfile = onSnapshot(doc(db, 'site_data', 'profile'), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.heroName || data.heroTitle) {
+          setHero({
+            title: data.heroTitle || fallbackData.hero.title,
+            name: data.heroName || fallbackData.hero.name,
+            tagline: data.heroTagline || fallbackData.hero.tagline,
+            description: data.heroDescription || fallbackData.hero.description,
+            status: data.heroStatus || fallbackData.hero.status,
+            profileImage: data.heroImage || fallbackData.hero.profileImage
+          });
         }
-      } catch (error) {
-        console.error("Error fetching profile", error);
+        if (data.cvLink) {
+          setCvLink(data.cvLink);
+        }
       }
+    }, (error) => {
+      console.error("Error fetching profile", error);
+    });
+
+    const unsubAbout = onSnapshot(doc(db, 'site_data', 'about'), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.stats && data.stats.length > 0) {
+          setStats(data.stats);
+        }
+      }
+    });
+
+    return () => {
+      unsubProfile();
+      unsubAbout();
     };
-    fetchProfile();
   }, []);
 
   const handleDownloadCV = () => {
@@ -128,14 +137,17 @@ const HeroSection = () => {
           <div className="relative">
             <div className="relative w-full max-w-md mx-auto">
               {/* Profile Image Circle */}
-              <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                <div className="w-full h-full bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 flex items-center justify-center">
-                  {/* Placeholder for profile image */}
-                  <div className="text-center">
-                    <div className="w-32 h-32 bg-deep-plum/10 rounded-full mx-auto mb-4"></div>
-                    <p className="text-gray-400">Profile Image</p>
+              <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-2xl relative">
+                {hero.profileImage ? (
+                  <img src={hero.profileImage} alt={hero.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-32 h-32 bg-deep-plum/10 rounded-full mx-auto mb-4"></div>
+                      <p className="text-gray-400">Profile Image</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

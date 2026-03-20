@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function ProjectsAdmin() {
   const [projects, setProjects] = useState<any[]>([]);
@@ -27,11 +28,14 @@ export default function ProjectsAdmin() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Yakin ingin menghapus project ini?')) {
+      const toastId = toast.loading('Menghapus project...');
       try {
         await deleteDoc(doc(db, 'projects', id));
+        toast.success('Project berhasil dihapus', { id: toastId });
         fetchProjects();
       } catch (error) {
         console.error("Error deleting project", error);
+        toast.error('Gagal menghapus project', { id: toastId });
       }
     }
   };

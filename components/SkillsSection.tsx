@@ -1,13 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Database, BarChart2, Brain, Award, X, Download, ExternalLink } from 'lucide-react';
 import { portfolioData } from '@/lib/data';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const SkillsSection = () => {
-  const { skills } = portfolioData;
+  const [skills, setSkills] = useState(portfolioData.skills);
   const [selectedCert, setSelectedCert] = useState<any>(null);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'site_data', 'skills'), (docSnap) => {
+      if (docSnap.exists()) {
+        setSkills(docSnap.data() as any);
+      }
+    }, (error) => {
+      console.error("Error fetching skills", error);
+    });
+
+    return () => unsub();
+  }, []);
 
   const getIcon = (iconName: string) => {
     switch (iconName) {

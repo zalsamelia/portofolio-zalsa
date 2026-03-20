@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, Linkedin, Github, Send } from 'lucide-react';
 import { portfolioData } from '@/lib/data';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 // Ikon Kaggle kustom (SVG)
 const KaggleIcon = ({ size = 24 }: { size?: number }) => (
@@ -18,13 +20,26 @@ const KaggleIcon = ({ size = 24 }: { size?: number }) => (
 );
 
 const ContactSection = () => {
-  const { contact } = portfolioData;
+  const [contact, setContact] = useState(portfolioData.contact);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'site_data', 'contact'), (docSnap) => {
+      if (docSnap.exists()) {
+        setContact(docSnap.data() as any);
+      }
+    }, (error) => {
+      console.error("Error fetching contact", error);
+    });
+
+    return () => unsub();
+  }, []);
 
   const getIcon = (iconName: string) => {
     switch (iconName) {

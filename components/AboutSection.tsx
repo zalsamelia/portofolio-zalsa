@@ -4,33 +4,33 @@
 import { useState, useEffect } from 'react';
 import { Briefcase, GraduationCap } from 'lucide-react';
 import { portfolioData as fallbackData } from '@/lib/data';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 const AboutSection = () => {
   const [about, setAbout] = useState(fallbackData.about);
-  const { experience } = fallbackData; // Keeping experience static for now
+  const [experience, setExperience] = useState(fallbackData.experience);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const docRef = doc(db, 'site_data', 'profile');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data.aboutHeading || data.aboutBio) {
-            setAbout(prev => ({
-              ...prev,
-              heading: data.aboutHeading || prev.heading,
-              bio: data.aboutBio || prev.bio
-            }));
-          }
+    const unsub = onSnapshot(doc(db, 'site_data', 'about'), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setAbout(prev => ({
+          ...prev,
+          heading: data.heading || prev.heading,
+          bio: data.bio || prev.bio,
+          methodologies: data.methodologies || prev.methodologies,
+          profileImage: data.profileImage || prev.profileImage
+        }));
+        if (data.experience && data.experience.length > 0) {
+          setExperience(data.experience);
         }
-      } catch (error) {
-        console.error("Error fetching about profile", error);
       }
-    };
-    fetchProfile();
+    }, (error) => {
+      console.error("Error fetching about profile", error);
+    });
+
+    return () => unsub();
   }, []);
 
 
@@ -47,14 +47,17 @@ const AboutSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
           {/* Left Column - Profile Image */}
           <div className="relative">
-            <div className="aspect-square max-w-md mx-auto rounded-full overflow-hidden border-8 border-soft-sage/30 shadow-xl">
-              <div className="w-full h-full bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 flex items-center justify-center">
-                {/* Placeholder for profile image */}
-                <div className="text-center">
-                  <div className="w-32 h-32 bg-deep-plum/10 rounded-full mx-auto mb-4"></div>
-                  <p className="text-gray-400">Profile Image</p>
+            <div className="aspect-square max-w-md mx-auto rounded-full overflow-hidden border-8 border-soft-sage/30 shadow-xl relative">
+              {about.profileImage ? (
+                <img src={about.profileImage} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-32 h-32 bg-deep-plum/10 rounded-full mx-auto mb-4"></div>
+                    <p className="text-gray-400">Profile Image</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 

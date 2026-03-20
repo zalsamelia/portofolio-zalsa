@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Save, UserCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function ProfileAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
 
   const [formData, setFormData] = useState({
     heroTitle: '',
@@ -47,15 +47,14 @@ export default function ProfileAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setMessage('');
+    const toastId = toast.loading('Menyimpan profile...');
 
     try {
       await setDoc(doc(db, 'site_data', 'profile'), formData);
-      setMessage('Profile berhasil disimpan!');
-      setTimeout(() => setMessage(''), 3000);
+      toast.success('Profile berhasil disimpan!', { id: toastId });
     } catch (error) {
       console.error("Error saving profile", error);
-      setMessage('Gagal menyimpan profile.');
+      toast.error('Gagal menyimpan profile.', { id: toastId });
     } finally {
       setSaving(false);
     }
@@ -71,12 +70,6 @@ export default function ProfileAdmin() {
         </h1>
         <p className="text-gray-500 mt-2">Ubah teks di Hero Section, About Me, dan Link CV Anda.</p>
       </div>
-
-      {message && (
-        <div className="mb-6 p-4 rounded-xl bg-[#C4D7C4]/30 text-green-800 font-medium text-center border border-[#C4D7C4]">
-          {message}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
         

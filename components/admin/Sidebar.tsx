@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, UserCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, UserCircle, LogOut, FileText, Award } from 'lucide-react';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,9 @@ export default function Sidebar() {
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { name: 'Projects', icon: FolderKanban, path: '/admin/projects' },
-    { name: 'Profile & CV', icon: UserCircle, path: '/admin/profile' },
+    { name: 'Hero Section', icon: UserCircle, path: '/admin/profile' },
+    { name: 'About & Exp', icon: FileText, path: '/admin/about' },
+    { name: 'Skills & Contact', icon: Award, path: '/admin/skills' },
   ];
 
   return (

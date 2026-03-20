@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function ProjectForm({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -62,6 +63,7 @@ export default function ProjectForm({ params }: { params: { id: string } }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    const toastId = toast.loading(isEdit ? 'Menyimpan perubahan...' : 'Menambahkan project...');
 
     const projectData = {
       title: formData.title,
@@ -80,12 +82,15 @@ export default function ProjectForm({ params }: { params: { id: string } }) {
     try {
       if (isEdit) {
         await updateDoc(doc(db, 'projects', params.id), projectData);
+        toast.success('Perubahan berhasil disimpan!', { id: toastId });
       } else {
         await addDoc(collection(db, 'projects'), projectData);
+        toast.success('Project baru berhasil ditambahkan!', { id: toastId });
       }
-      router.push('/admin/projects');
+      setTimeout(() => router.push('/admin/projects'), 500);
     } catch (error) {
       console.error("Error saving project", error);
+      toast.error('Gagal menyimpan project.', { id: toastId });
     } finally {
       setSaving(false);
     }
