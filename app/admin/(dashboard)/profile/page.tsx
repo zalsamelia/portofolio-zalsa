@@ -4,6 +4,8 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Save, UserCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+
+export default function ProfileAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -134,7 +136,7 @@ import toast from 'react-hot-toast';
                 Link CV PDF sudah dimasukkan.
               </div>
             )}
-            <p className="text-xs text-gray-500 mt-1">Pastikan link Google Drive sudah diatur ke "Anyone with the link can view".</p>
+            <p className="text-xs text-gray-500 mt-1">Pastikan link Google Drive sudah diatur ke &quot;Anyone with the link can view&quot;.</p>
           </div>
         </div>
 
