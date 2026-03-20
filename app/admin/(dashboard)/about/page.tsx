@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Save, Plus, Trash2, FileText } from 'lucide-react';
+import { Save, UserCircle, Plus, Trash2, FileText, UploadCloud } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { uploadFileToStorage } from '@/lib/upload';
 
 export default function AboutAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     heading: '',
@@ -46,6 +48,23 @@ export default function AboutAdmin() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    const toastId = toast.loading('Mengunggah foto...');
+    try {
+      const url = await uploadFileToStorage(file, 'about');
+      setFormData(prev => ({ ...prev, profileImage: url }));
+      toast.success('Foto profil berhasil diunggah!', { id: toastId });
+    } catch (error) {
+      toast.error('Gagal mengunggah foto profil.', { id: toastId });
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   // --- STATS HANDLERS ---
@@ -128,9 +147,26 @@ export default function AboutAdmin() {
             <textarea name="bio" value={formData.bio} onChange={handleChange} rows={4} className="w-full px-4 py-2 border rounded-xl" placeholder="I specialize in turning raw data..." />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">URL Foto Profil (Opsional)</label>
-            <input type="text" name="profileImage" value={formData.profileImage} onChange={handleChange} className="w-full px-4 py-2 border rounded-xl" placeholder="https://..." />
-            <p className="text-xs text-gray-500">Foto profil asli Anda (bukan logo). Kosongkan untuk pakai default.</p>
+            <label className="text-sm font-medium text-gray-700">Foto Profil (URL Opsional)</label>
+            <div className="flex items-center gap-6">
+              <div className="w-24 h-24 rounded-full border-4 border-[#C4D7C4] shadow-md overflow-hidden bg-gray-100 flex-shrink-0 relative flex items-center justify-center">
+                {formData.profileImage ? (
+                  <img src={formData.profileImage} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <UserCircle size={40} className="text-gray-400" />
+                )}
+                {uploadingImage && <div className="absolute inset-0 bg-white/70 flex items-center justify-center"><div className="w-5 h-5 border-2 border-[#5D3A5D] border-t-transparent rounded-full animate-spin"></div></div>}
+              </div>
+              
+              <div className="flex-1">
+                <label className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:bg-gray-50 transition-colors ${uploadingImage ? 'opacity-50 pointer-events-none' : 'border-gray-300'}`}>
+                  <UploadCloud size={20} className="text-[#5D3A5D]" />
+                  <span className="text-sm font-medium text-gray-700">Pilih Foto Profil (.jpg/.png)</span>
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                </label>
+                <p className="text-xs text-gray-500 mt-2">Pilih gambar dari laptop Anda. Otomatis terpotong menjadi lingkaran.</p>
+              </div>
+            </div>
           </div>
         </div>
 
