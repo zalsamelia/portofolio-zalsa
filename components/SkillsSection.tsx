@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Database, BarChart2, Brain, Award, X } from 'lucide-react';
+import { Database, BarChart2, Brain, Award, X, Download, ExternalLink } from 'lucide-react';
 import { portfolioData } from '@/lib/data';
 
 const SkillsSection = () => {
@@ -162,17 +162,17 @@ const SkillsSection = () => {
         </div>
       </div>
 
-      {/* Certification Modal */}
+      {/* Modal Sertifikat */}
       {selectedCert && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedCert(null)}
         >
           <div
-            className="bg-white rounded-2xl p-8 max-w-2xl w-full relative"
+            className="bg-white rounded-2xl p-8 w-[80%] max-w-2xl max-h-[90vh] overflow-y-auto relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
+            {/* Tombol Close */}
             <button
               onClick={() => setSelectedCert(null)}
               className="
@@ -183,31 +183,55 @@ const SkillsSection = () => {
               <X size={24} />
             </button>
 
-            {/* Certificate Content */}
+            {/* Konten Sertifikat */}
             <div className="text-center">
               <Award className="text-gold-metallic mx-auto mb-4" size={48} />
               <h3 className="text-2xl font-playfair font-bold text-deep-plum mb-2">
                 {selectedCert.name}
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-6">
                 {selectedCert.issuer} • {selectedCert.year}
               </p>
 
-              {/* Certificate Image */}
-              <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center relative">
-                {selectedCert.image ? (
-                  <Image
-                    src={selectedCert.image}
-                    alt={selectedCert.name}
-                    fill
-                    className="object-cover"
-                  />
+              {/* Gambar Sertifikat */}
+              <div className="bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center relative mb-6" style={{ minHeight: '200px' }}>
+                {selectedCert.imageUrl ? (
+                  <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
+                    <Image
+                      src={selectedCert.imageUrl}
+                      alt={selectedCert.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 ) : (
-                  <div className="text-center">
+                  <div className="text-center py-12">
                     <Award className="text-gray-300 mx-auto mb-2" size={64} />
                     <p className="text-gray-400">Certificate Image</p>
                   </div>
                 )}
+              </div>
+
+              {/* Tombol Aksi */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                {/* Tombol Download PDF */}
+                {selectedCert.pdfUrl && (
+                  <a
+                    href={selectedCert.pdfUrl}
+                    download={`${selectedCert.name.replace(/\s+/g, '_')}_Certificate.pdf`}
+                    className="
+                      flex items-center justify-center gap-2
+                      px-6 py-3 bg-deep-plum text-white rounded-full
+                      font-medium transition-all duration-300
+                      hover:scale-105 hover:shadow-lg
+                    "
+                  >
+                    <Download size={18} />
+                    Download PDF
+                  </a>
+                )}
+
+
               </div>
             </div>
           </div>
