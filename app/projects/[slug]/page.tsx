@@ -1,19 +1,49 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { portfolioData } from '@/lib/data';
 
 export default function ProjectDetail() {
   const params = useParams();
   const slug = params.slug as string;
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // In production, you would fetch project by slug
-  // For now, we'll find by matching slug pattern
-  const project = portfolioData.projects.find(p => 
-    p.link.caseStudy.includes(slug)
-  );
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        let foundProject = null;
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.link?.caseStudy?.includes(slug) || doc.id === slug) {
+            foundProject = { id: doc.id, ...data };
+          }
+        });
+
+        if (foundProject) {
+          setProject(foundProject);
+        } else {
+          const staticProject = portfolioData.projects.find(p => p.link.caseStudy.includes(slug));
+          setProject(staticProject || null);
+        }
+      } catch (error) {
+        console.error("Error fetching project details", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProject();
+  }, [slug]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading project details...</div>;
+  }
 
   if (!project) {
     return (
@@ -85,7 +115,7 @@ export default function ProjectDetail() {
               Technologies Used
             </h3>
             <div className="flex flex-wrap gap-2">
-              {project.techStack.map((tech, index) => (
+              {project.techStack?.map((tech: string, index: number) => (
                 <span
                   key={index}
                   className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full"
@@ -98,7 +128,7 @@ export default function ProjectDetail() {
 
           {/* Links */}
           <div className="flex gap-4">
-            {project.link.github && (
+            {project.link?.github && (
               <a
                 href={project.link.github}
                 target="_blank"
@@ -119,11 +149,15 @@ export default function ProjectDetail() {
       {/* Project Image */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="aspect-video bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 rounded-2xl flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-deep-plum/10 rounded-lg mx-auto mb-4"></div>
-              <p className="text-gray-400">Project Screenshot</p>
-            </div>
+          <div className="aspect-video bg-gradient-to-br from-muted-rose/20 to-soft-sage/20 rounded-2xl flex items-center justify-center overflow-hidden relative">
+            {project.image && project.image !== '/images/project-placeholder.svg' ? (
+              <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="text-center">
+                <div className="w-24 h-24 bg-deep-plum/10 rounded-lg mx-auto mb-4"></div>
+                <p className="text-gray-400">Project Screenshot</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -146,7 +180,7 @@ export default function ProjectDetail() {
 
             <h3 className="text-xl font-bold text-deep-plum mb-4">Solution</h3>
             <p className="text-gray-600 mb-6">
-              Using {project.techStack.join(', ')}, I developed a comprehensive solution 
+              Using {project.techStack?.join(', ')}, I developed a comprehensive solution 
               that transformed raw data into actionable insights. The implementation 
               focused on accuracy, performance, and user-friendly visualization.
             </p>

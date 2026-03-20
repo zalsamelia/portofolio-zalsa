@@ -1,14 +1,51 @@
 'use client';
 
 
+import { useState, useEffect } from 'react';
 import { Download, ArrowRight } from 'lucide-react';
-import { portfolioData } from '@/lib/data';
+import { portfolioData as fallbackData } from '@/lib/data';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const HeroSection = () => {
-  const { hero, stats } = portfolioData;
+  const [hero, setHero] = useState(fallbackData.hero);
+  const [stats] = useState(fallbackData.stats);
+  const [cvLink, setCvLink] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const docRef = doc(db, 'site_data', 'profile');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.heroName) {
+            setHero({
+              title: data.heroTitle || fallbackData.hero.title,
+              name: data.heroName,
+              tagline: data.heroTagline || fallbackData.hero.tagline,
+              description: data.heroDescription || fallbackData.hero.description,
+              status: data.heroStatus || fallbackData.hero.status,
+              profileImage: fallbackData.hero.profileImage
+            });
+          }
+          if (data.cvLink) {
+            setCvLink(data.cvLink);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile", error);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleDownloadCV = () => {
-    // Download CV from public/files folder
+    if (cvLink) {
+      window.open(cvLink, '_blank');
+      return;
+    }
+    // Fallback
     const link = document.createElement('a');
     link.href = '/files/Zalsabilah_DataAnalyst_Resume.pdf';
     link.download = 'Zalsabilah_DataAnalyst_Resume.pdf';

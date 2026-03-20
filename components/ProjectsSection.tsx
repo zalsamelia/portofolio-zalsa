@@ -1,16 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight, Github } from 'lucide-react';
 import { portfolioData, projectCategories } from '@/lib/data';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const ProjectsSection = () => {
   const [activeFilter, setActiveFilter] = useState('All');
-  const { projects } = portfolioData;
+  const [projects, setProjects] = useState<any[]>(portfolioData.projects);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        if (!querySnapshot.empty) {
+          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setProjects(data as any[]);
+        }
+      } catch (error) {
+        console.error("Error fetching projects", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   const filteredProjects = activeFilter === 'All' 
     ? projects 
-    : projects.filter(project => project.categories.includes(activeFilter));
+    : projects.filter(project => project.categories?.includes(activeFilter) || project.category === activeFilter);
+
 
   return (
     <section id="projects" className="py-20 bg-gray-50">
@@ -59,12 +80,16 @@ const ProjectsSection = () => {
             >
               {/* Project Image */}
               <div className="relative h-64 bg-gradient-to-br from-muted-rose/20 to-soft-sage/20">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-gray-400">
-                    <div className="w-20 h-20 bg-deep-plum/10 rounded-lg mx-auto mb-2"></div>
-                    <p className="text-sm">Project Thumbnail</p>
+                {project.image && project.image !== '/images/project-placeholder.svg' ? (
+                  <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-gray-400">
+                      <div className="w-20 h-20 bg-deep-plum/10 rounded-lg mx-auto mb-2"></div>
+                      <p className="text-sm">Project Thumbnail</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Project Content */}
@@ -94,7 +119,7 @@ const ProjectsSection = () => {
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech, index) => (
+                  {project.techStack?.map((tech: string, index: number) => (
                     <span
                       key={index}
                       className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
@@ -106,16 +131,18 @@ const ProjectsSection = () => {
 
                 {/* Links */}
                 <div className="flex gap-4 pt-4">
-                  <a
-                    href={project.link.caseStudy}
-                    className="
-                      flex items-center gap-2 text-deep-plum font-medium
-                      transition-all duration-300 hover:gap-3
-                    "
-                  >
-                    View Case Study
-                    <ArrowRight size={18} />
-                  </a>
+                  {project.link?.caseStudy && (
+                    <a
+                      href={project.link.caseStudy}
+                      className="
+                        flex items-center gap-2 text-deep-plum font-medium
+                        transition-all duration-300 hover:gap-3
+                      "
+                    >
+                      View Case Study
+                      <ArrowRight size={18} />
+                    </a>
+                  )}
 
                   {project.link.github && (
                     <a

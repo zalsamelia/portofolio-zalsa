@@ -1,11 +1,38 @@
 'use client';
 
 
+import { useState, useEffect } from 'react';
 import { Briefcase, GraduationCap } from 'lucide-react';
-import { portfolioData } from '@/lib/data';
+import { portfolioData as fallbackData } from '@/lib/data';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const AboutSection = () => {
-  const { about, experience } = portfolioData;
+  const [about, setAbout] = useState(fallbackData.about);
+  const { experience } = fallbackData; // Keeping experience static for now
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const docRef = doc(db, 'site_data', 'profile');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.aboutHeading || data.aboutBio) {
+            setAbout(prev => ({
+              ...prev,
+              heading: data.aboutHeading || prev.heading,
+              bio: data.aboutBio || prev.bio
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching about profile", error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
 
   const getIcon = (iconName: string) => {
     if (iconName === 'briefcase') return <Briefcase className="text-deep-plum" size={24} />;
