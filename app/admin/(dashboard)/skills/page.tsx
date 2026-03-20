@@ -2,9 +2,8 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Save, Plus, Trash2, Award, UploadCloud } from 'lucide-react';
+import { Save, Plus, Trash2, Award } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { uploadFileToStorage } from '@/lib/upload';
 
 export default function SkillsAdmin() {
   const [loading, setLoading] = useState(true);
@@ -124,41 +123,6 @@ export default function SkillsAdmin() {
     const newCerts = [...skillsData.certifications];
     newCerts.splice(index, 1);
     setSkillsData({ ...skillsData, certifications: newCerts });
-  };
-
-  const [uploadingCertImage, setUploadingCertImage] = useState<number | null>(null);
-  const [uploadingCertPdf, setUploadingCertPdf] = useState<number | null>(null);
-
-  const handleCertImageUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingCertImage(index);
-    const toastId = toast.loading(`Mengunggah gambar sertifikat...`);
-    try {
-      const url = await uploadFileToStorage(file, 'certificates');
-      handleCertChange(index, 'imageUrl', url);
-      toast.success('Gambar berhasil diunggah!', { id: toastId });
-    } catch {
-      toast.error('Gagal.', { id: toastId });
-    } finally {
-      setUploadingCertImage(null);
-    }
-  };
-
-  const handleCertPdfUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingCertPdf(index);
-    const toastId = toast.loading(`Mengunggah PDF sertifikat...`);
-    try {
-      const url = await uploadFileToStorage(file, 'certificates');
-      handleCertChange(index, 'pdfUrl', url);
-      toast.success('PDF berhasil diunggah!', { id: toastId });
-    } catch {
-      toast.error('Gagal.', { id: toastId });
-    } finally {
-      setUploadingCertPdf(null);
-    }
   };
 
   // --- CONTACT INFO ---
@@ -293,16 +257,8 @@ export default function SkillsAdmin() {
                     <input type="text" placeholder="Tahun" value={cert.year} onChange={(e) => handleCertChange(i, 'year', e.target.value)} className="w-24 px-3 py-2 border rounded-lg text-sm" />
                   </div>
                   <div className="flex gap-3">
-                    <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 border-2 border-dashed rounded-lg cursor-pointer hover:bg-white transition-colors ${uploadingCertImage === i ? 'opacity-50 pointer-events-none' : 'border-gray-300'}`}>
-                      <UploadCloud size={16} className="text-[#5D3A5D]" /> 
-                      <span className="text-sm font-medium text-gray-700">{cert.imageUrl ? '✓ Gambar Siap' : 'Upload Gambar'}</span>
-                      <input type="file" accept="image/*" onChange={(e) => handleCertImageUpload(i, e)} className="hidden" />
-                    </label>
-                    <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 border-2 border-dashed rounded-lg cursor-pointer hover:bg-white transition-colors ${uploadingCertPdf === i ? 'opacity-50 pointer-events-none' : 'border-gray-300'}`}>
-                      <UploadCloud size={16} className="text-[#5D3A5D]" /> 
-                      <span className="text-sm font-medium text-gray-700">{cert.pdfUrl ? '✓ PDF Siap' : 'Upload PDF'}</span>
-                      <input type="file" accept="application/pdf" onChange={(e) => handleCertPdfUpload(i, e)} className="hidden" />
-                    </label>
+                    <input type="text" placeholder="URL Gambar Sertifikat (Opsional)" value={cert.imageUrl} onChange={(e) => handleCertChange(i, 'imageUrl', e.target.value)} className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+                    <input type="text" placeholder="URL PDF (Opsional)" value={cert.pdfUrl} onChange={(e) => handleCertChange(i, 'pdfUrl', e.target.value)} className="flex-1 px-3 py-2 border rounded-lg text-sm" />
                   </div>
                 </div>
                 <button type="button" onClick={() => removeCert(i)} className="text-red-500 hover:bg-red-100 p-2 rounded-lg h-fit"><Trash2 size={20}/></button>
